@@ -3,7 +3,6 @@
 
 #include "DefaultComponent.h"
 
-
 class Resistor : public DefaultComponent {
     public:
         // Default Constructor
