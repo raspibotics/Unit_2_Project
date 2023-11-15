@@ -1,7 +1,7 @@
 #include "DefaultComponent.h"
 
 // Constructor Definitions
-DefaultComponent::DefaultComponent() {};
+DefaultComponent::DefaultComponent() : _component_id{"unnamed"} {}
 DefaultComponent::DefaultComponent(std::string component_id) : _component_id{component_id} {}
 
 // Mutator Definitions

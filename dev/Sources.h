@@ -2,13 +2,13 @@
 #define SOURCES_H
 
 #include "DefaultComponent.h"
-
-class DC_VoltageSource : public DefaultComponent {
+// Read why needs to inhertial a virtual DefaultComponent!
+class DC_VoltageSource : public virtual DefaultComponent {
     public:
         // Default Constructor
         DC_VoltageSource();
         // Non-default Constructor(s)
-        DC_VoltageSource(double amplitude, double impedence);
+        DC_VoltageSource(std::string component_id, double amplitude, double impedence);
         // Mutators
         void set_amplitude(double amplitude);
         void set_impedence(double impedence);
@@ -26,7 +26,7 @@ class AC_VoltageSource : public DC_VoltageSource {
         // Default Constructor
         AC_VoltageSource();
         // Non-default Constructor(s)
-        AC_VoltageSource(double amplitude, double impedence, double frequency, double phase);
+        AC_VoltageSource(std::string component_id, double amplitude, double impedence, double frequency, double phase);
         // Mutators
         void set_frequency(double frequency);
         void set_phase(double phase);
