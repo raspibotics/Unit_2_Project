@@ -13,7 +13,7 @@ ParallelComponent(id="Combination_1") {
 } 
 
 // Parallel funcions can be in Parallel with another Parallel function
-ParallelComponent("Combination_2"){
+ParallelComponent("Combination_2") {
     Combination_1, 
     Resistor("R1", 100ohm);
 } 
