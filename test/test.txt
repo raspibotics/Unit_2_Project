@@ -2,18 +2,18 @@
 // Entry point must be a voltage source "function"
 AC_Source("my_voltage_source", 5V, 50Hz, 25ohm, 0rad) {
     
-    // Each sequential component is connected in series unless Parrallel conenction specified
+    // Each sequential component is connected in series unless Parallel conenction specified
     Capacitor("C1", 0.0001F);
     
-    // Parrallel connections are made by creating a Parrallel "function"
-    Parrallel("Combination_1", Null) {
+    // Parallel connections are made by creating a Parallel "function"
+    Parallel("Combination_1", Null) {
         Resistor("R1", 100ohm);
         Resistor("R2", 50ohm);
         Resistor("R3", 25ohm);
     }
 
-    // Parrallel funcions can be in Parrallel with another Parrallel function
-    Parrallel("Combination_2", Combination_1) {
+    // Parallel funcions can be in Parallel with another Parallel function
+    Parallel("Combination_2", Combination_1) {
         Resistor("R1", 100ohm);
     }
 
