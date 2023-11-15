@@ -8,6 +8,7 @@ class DefaultComponent {
     public: 
         // Default Constructor
         DefaultComponent();
+        DefaultComponent(std::string component_id);
         // Mutators
         void set_component_id(std::string);
         void set_component_voltage(double voltage);

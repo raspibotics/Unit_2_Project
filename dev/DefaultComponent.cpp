@@ -1,5 +1,9 @@
 #include "DefaultComponent.h"
 
+// Constructor Definitions
+DefaultComponent::DefaultComponent() {};
+DefaultComponent::DefaultComponent(std::string component_id) : _component_id{component_id} {}
+
 // Mutator Definitions
 void DefaultComponent::set_component_id(std::string component_id) {
     _component_id = component_id;
