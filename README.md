@@ -1,7 +1,7 @@
 # Electronics Simulator
 
 Names: 
-Harry Brenton 123123
+Harry Brenton
 
 
 Hemish Patel
