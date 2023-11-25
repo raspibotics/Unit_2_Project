@@ -20,20 +20,14 @@ double harmonicProductSpectrum(std::map<double, double> amplitude_frequency_map)
     return hps;
 } 
 
-bool inTune(double hps){
-    bool tuning;
-
-    return tuning; 
-}
-
-double tuningCorrectionFactor(double hps, BaseInstrument instrument){
+double tuningCorrectionFactor(double hps, BaseInstrument Instrument){
     double tuning_correction; 
 
     return tuning_correction; 
 }
 
-double calculateStandardDeviation(double *frequency_list_pointer) {
-    double std_dev; 
-    return std_dev; 
-}
+bool inTune(double tuning_correction){
+    bool tuning;
 
+    return tuning; 
+}
