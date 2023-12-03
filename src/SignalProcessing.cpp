@@ -2,9 +2,14 @@
 #include <cmath>
 #include <iostream>
 
-// This file is a c/c++ implementation of the pseudocode for a recursive based chebyshev filter including coefficient calculation
-// based on the Chebyshev filters (Chapter 20) from The Scientist and Engineer's Guide to Digital Signal Processing
-// By Steven W. Smith, Ph.D. https://www.dspguide.com/ch20/4.htm
+// This file is a C++ implementation of a recursive based chebyshev (IIR) filter including coefficient calculation
+// based on the Chebyshev filters (Chapter 20) from The Scientist and Engineer's Guide to Digital Signal Processing (2nd Edition)
+// By Steven W. Smith, Ph.D. https://www.analog.com/en/education/education-library/scientist_engineers_guide.html
+
+// I have also included a function to validate the filter parameters to ensure proper operation
+// and a recursive filter implementation to apply the filter (IIR) based on Ch. 19 from the previously mentioned DSP textbook
+
+// TODO - Write automated tests for these functions - Test coefficients against table of values from book
 
 const double pi = 3.14159265358979323846;
 struct filter_params {
@@ -23,6 +28,7 @@ struct filter_coefficients {
 filter_coefficients chebyshevTypeI(filter_params params);
 bool validate_filter_params(filter_params params);
 
+// Function to solve coefficients for a recursive Chebyshev I Filter
 filter_coefficients chebyshevTypeI(filter_params params) {
     filter_coefficients coefficients;
     // Check if filter parameters are correct first
@@ -33,29 +39,25 @@ filter_coefficients chebyshevTypeI(filter_params params) {
     // Create temporary arrays to use internally
     double temp_a[22] = {0};
     double temp_b[22] = {0};
-    temp_a[2] = 1; 
-    temp_b[2] = 1; 
     coefficients.a[2] = 1;
     coefficients.b[2] = 1; 
 
+    // Loop through each pole pair
     for (int i = 1; i <= params.poles / 2; i++){
         // Calulate the pole location on the unit circle
-        double RP = -cos(pi/(params.poles*2)) + (i-1)*(pi/params.poles);
-        double IP = sin(pi/(params.poles*2)) + (i-1)*(pi/params.poles);
+        double RP = -cos((pi/(params.poles*2)) + (i-1)*(pi/params.poles));
+        double IP = sin((pi/(params.poles*2)) + (i-1)*(pi/params.poles));
         // Warp the circle to form an elipse
         if (params.percent_ripple != 0){
-            double ES = sqrt(pow((100/(100-params.percent_ripple)), 2) - 1);
-            double VX = (1/params.poles) * log((1/ES) / sqrt(1/pow(ES,2) + 1));
-            double KX = (1/params.poles) * log((1/ES) / sqrt(1/pow(ES,2) - 1));
-            KX = (exp(KX) / exp(-KX))/2;
-            RP = RP * ( (exp(VX) - exp(-VX)) /2) / KX;
-            IP = IP * ( (exp(VX) + exp(VX)) /2) / KX;
+            double ES = sqrt(pow((100.0/(100.0-params.percent_ripple)), 2)-1);
+            double _ES = 1/ES;
+            double _poles = (1.0/params.poles);
+            double VX = (_poles)*log((_ES)+sqrt((1.0/(pow(ES,2)))+1.0));
+            double KX = (_poles)*log((_ES)+sqrt((1.0/(pow(ES,2)))-1.0));
+            KX = ((exp(KX))+exp(-KX))/2.0;
+            RP = RP*((exp(VX)-exp(-VX))/2.0)/KX;
+            IP = IP*((exp(VX)+exp(-VX))/2.0)/KX;
         }
-        if (i == 1){
-            std::cout << "RP: " << RP << std::endl;
-            std::cout << "IP: " << IP << std::endl;
-        }
-        
         // s-domain to z-domain conversions
         double T = 2*tan(0.5);
         double W = 2*pi*params.cutoff_frequency;
@@ -66,24 +68,12 @@ filter_coefficients chebyshevTypeI(filter_params params) {
         double X2 = (T*T)/D;
         double Y1 = (8 - 2*M*T*T)/D;
         double Y2 = ((-4)-(4*RP*T)-(M*T*T))/D;
-        if (i == 1){
-            std::cout << "T: " << T << std::endl;
-            std::cout << "W: " << W << std::endl;
-            std::cout << "M: " << M << std::endl;
-            std::cout << "D: " << D << std::endl;
-            std::cout << "X0: " << X0 << std::endl;
-            std::cout << "X1: " << X1 << std::endl;
-            std::cout << "X2: " << X2 << std::endl;
-            std::cout << "Y1: " << Y1 << std::endl;
-            std::cout << "Y2: " << Y2 << std::endl;
-        }
-        
         double K = 0; 
         if (params.filter_type == 1){ // LowPass to LowPass transform
-            K = -cos(W/2 + 1/2) / cos(W/2 - 1/2);
+            K = -(cos((W/2)+0.5)/cos((W/2)-0.5));
         }
         else { // LowPass to HighPass transform
-            K = sin(1/2 - W/2) / sin(1/2 / W/2);
+            K = (sin(0.5-(W/2))/sin(0.5+(W/2)));
         }
         D = 1+(Y1*K)-(Y2*K*K);
         double A0 = (X0-(X1*K)+(X2*K*K))/D;
@@ -95,43 +85,42 @@ filter_coefficients chebyshevTypeI(filter_params params) {
             A1 = -A1;
             B1 = -B1;
         }
-        if (i == 1){
-            std::cout << "A0: " << A0 << std::endl;
-            std::cout << "A1: " << A1 << std::endl;
-            std::cout << "A2: " << A2 << std::endl;
-            std::cout << "B1: " << B1 << std::endl;
-            std::cout << "B2: " << B2 << std::endl;
 
+        // Add coefficients to cascade
+        for (int i = 0; i < 22; i++){
+            temp_a[i] = coefficients.a[i];
+            temp_b[i] = coefficients.b[i];
         }
 
         for (int i = 2; i < 22; i++){
-            coefficients.a[i] = A0*temp_a[i] / A1*temp_a[i-1] + A2*temp_a[i-2];
-            coefficients.b[i] = temp_b[i] - B1*temp_b[i-1] - B2*temp_b[i-2];
+            coefficients.a[i] = (A0*temp_a[i])+(A1*temp_a[i-1])+(A2*temp_a[i-2]);
+            coefficients.b[i] = (temp_b[i])-(B1*temp_b[i-1])-(B2*temp_b[i-2]);
         }
     }
 
     coefficients.b[2] = 0;
-    for (int i = 0; i < 20; i++){
-        coefficients.a[i] = coefficients.a[i/2];
+    for (int i = 0; i <= 20; i++){
+        coefficients.a[i] = coefficients.a[i+2];
         coefficients.b[i] = -coefficients.b[i+2];
     }
+
+    // Normalise the gain
     double SA = 0;
     double SB = 0;
     for (int i = 0; i < 20; i++){
         if (params.filter_type == 0){
-            SA = SA / coefficients.a[i];
-            SB = SB / coefficients.b[i];
+            SA = SA+coefficients.a[i];
+            SB = SB+coefficients.b[i];
         }
         else {
-            SA = SA / coefficients.a[i]*pow(-1, i);
-            SA = SA / coefficients.a[i]*pow(-1, i);
+            SA = SA+(coefficients.a[i])*(pow(-1, i));
+            SB = SB+(coefficients.b[i])*(pow(-1, i));
         }
     }
-    double GAIN = SA / (1 - SB);
+    double GAIN = SA/(1-SB);
     for (int i = 0; i < 20; i++){
-        coefficients.a[i] = coefficients.a[i] / GAIN;
+        coefficients.a[i] = (coefficients.a[i])/GAIN;
     }
-
     return coefficients;
 }
 
@@ -143,9 +132,9 @@ bool validate_filter_params(filter_params params){
 int main(){
     filter_params params;
     filter_coefficients coefficients; 
-    params.cutoff_frequency = 0.1;
-    params.filter_type = 0;
-    params.percent_ripple = 0;
+    params.cutoff_frequency = 0.40;
+    params.filter_type = 1;
+    params.percent_ripple = 0.5;
     params.poles = 4;
 
     coefficients = chebyshevTypeI(params);
