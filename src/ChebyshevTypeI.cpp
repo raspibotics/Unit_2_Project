@@ -1,7 +1,7 @@
 // Author - Harry Brenton
 #include <cmath>
 #include <iostream>
-
+#include "include/ChebyshevTypeI.h"
 // This file is a C++ implementation of a recursive based chebyshev (IIR) filter including coefficient calculation
 // based on the Chebyshev filters (Chapter 20) from The Scientist and Engineer's Guide to Digital Signal Processing (2nd Edition)
 // By Steven W. Smith, Ph.D. https://www.analog.com/en/education/education-library/scientist_engineers_guide.html
@@ -10,24 +10,6 @@
 // and a recursive filter implementation to apply the filter (IIR) based on Ch. 19 from the previously mentioned DSP textbook
 
 // TODO - Write automated tests for these functions - Test coefficients against table of values from book
-
-const double pi = 3.14159265358979323846;
-struct filter_params {
-    double cutoff_frequency; // 0 - 0.5 (Nyquist frequency)
-    bool filter_type; // 0 for low_pass 1 for high_pass
-    double percent_ripple; // 0 - 29% 
-    int poles; 
-};
-
-struct filter_coefficients {
-    double a[22];
-    double b[22];
-};
-
-// Function Prototypes 
-filter_coefficients chebyshevTypeI(filter_params params);
-bool validate_filter_params(filter_params params);
-
 // Function to solve coefficients for a recursive Chebyshev I Filter
 filter_coefficients chebyshevTypeI(filter_params params) {
     filter_coefficients coefficients;
@@ -85,13 +67,11 @@ filter_coefficients chebyshevTypeI(filter_params params) {
             A1 = -A1;
             B1 = -B1;
         }
-
         // Add coefficients to cascade
         for (int i = 0; i < 22; i++){
             temp_a[i] = coefficients.a[i];
             temp_b[i] = coefficients.b[i];
         }
-
         for (int i = 2; i < 22; i++){
             coefficients.a[i] = (A0*temp_a[i])+(A1*temp_a[i-1])+(A2*temp_a[i-2]);
             coefficients.b[i] = (temp_b[i])-(B1*temp_b[i-1])-(B2*temp_b[i-2]);
@@ -103,7 +83,6 @@ filter_coefficients chebyshevTypeI(filter_params params) {
         coefficients.a[i] = coefficients.a[i+2];
         coefficients.b[i] = -coefficients.b[i+2];
     }
-
     // Normalise the gain
     double SA = 0;
     double SB = 0;
@@ -125,17 +104,36 @@ filter_coefficients chebyshevTypeI(filter_params params) {
 }
 
 bool validate_filter_params(filter_params params){
-    // TODO - Implement filter parameter checks here
-    return true;
+    bool valid_params = true; 
+    // Check cutoff frequency is set within correct range
+    if (params.cutoff_frequency <= 0 || params.cutoff_frequency > 0.5){
+        std::cout << "INVALID FILTER PARAMETER [Cutoff Frequency]: Cutoff frequency must be [0<Fc<=0.5] (0.5 = Nyquist Frequency)" << std::endl;
+        valid_params = false; 
+    }
+    // Check filter type is set to either low pass or high pass
+    if ((params.filter_type != 0) && (params.filter_type != 1)){
+        std::cout << "INVALID FILTER PARAMETER [Filter Type]: Filter type must either be 0 (Low pass) or 1 (High pass)" << std::endl;
+        valid_params = false;
+    } 
+    // Check percentage ripple is set within acceptable limits (0% is Butterworth)
+    if (params.percent_ripple < 0 || params.cutoff_frequency > 29){
+        std::cout << "INVALID FILTER PARAMETER [Percent Ripple]: Ripple percentage must be [0<=PR<=29]" << std::endl;
+        valid_params = false; 
+    }
+    return valid_params;
+}
+
+void apply_filter(filter_coefficients coeff, double *frequencies){
+// TODO - Implement IIR recursive filter
 }
 
 int main(){
     filter_params params;
     filter_coefficients coefficients; 
-    params.cutoff_frequency = 0.40;
-    params.filter_type = 1;
+    params.cutoff_frequency = 0.50;
+    params.filter_type = 0;
     params.percent_ripple = 0.5;
-    params.poles = 4;
+    params.poles = 6;
 
     coefficients = chebyshevTypeI(params);
     std::cout << "Final A coefficients" << std::endl;
