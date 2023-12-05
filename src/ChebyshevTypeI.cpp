@@ -136,21 +136,33 @@ bool ChebyshevI::validate_filter_params(){
     return valid_params;
 }
 
+
+// TODO - Test by plotting filter response using python - Check against Impulse, square wave etc.
 // Recursive filter implementation - Based on theory from Chapter 19 (Smith, S.W. 2003. Digital signal processing : a practical guide for engineers and scientists. Amsterdam ; Newnes.
 std::vector<double> ChebyshevI::apply_filter(std::vector<double> samples){
     int signal_length = samples.size();
+    std::cout << "signal length" << signal_length << std::endl;
     std::vector<double> filtered_signal(signal_length, 0); 
     double fa = 0;
     double fb = 0; 
+    double temp_a = 0; 
+    double temp_b = 0; 
     // Iterate through each sample
-    for (int i = _params.poles + 1; samples.size(); i++){
+    for (int i = _params.poles + 1; i < signal_length; i++){
+        fa = 0;
+        fb = 0; 
         // Add "a" coefficient weighted components to filtered signal
-        for (int p = 0; p < (_params.poles + 1); i++){
-             fa += samples[i-p]*_coefficients.a[p];
+        for (int p = 0; p <= _params.poles; p++){
+            temp_a = samples[i-p];
+            std::cout << "temp a: " << temp_a << std::endl;
+            std::cout << "current A: " << _coefficients.a[p] << std::endl;
+            fa += (temp_a)*(_coefficients.a[p]);
         }
         // Add "b" coefficient weighted components to filtered signal
-        for (int p = 0; p < (_params.poles); i++){
-             fb += filtered_signal[i-p]*_coefficients.b[p];
+        for (int p = 1; p <= _params.poles; p++){
+            std::cout << "current B: " << _coefficients.b[p] << std::endl;
+            temp_b = filtered_signal[i-p];
+            fb += (temp_b)*(_coefficients.b[p]);
         }
         filtered_signal[i] = fa + fb; 
     }
@@ -158,16 +170,18 @@ std::vector<double> ChebyshevI::apply_filter(std::vector<double> samples){
 }
 
 int main(){
-    std::vector<double> test_samples = {0, 2};
+    std::vector<double> test_samples = {0,0,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     // Create a filter object with desired characteristics
     filter_params params;
-    params.cutoff_frequency = 0.50;
+    params.cutoff_frequency = 0.45;
     params.filter_type = "LP";
-    params.percent_ripple = 0.5;
-    params.poles = 6;
+    params.percent_ripple = 2;
+    params.poles = 4;
     ChebyshevI my_filter(params);
     // Calculate coefficients based on desired characteristics
     my_filter.calculate_coefficients();
+    // Apply the filter to samples
+    std::vector<double> test_filtered = my_filter.apply_filter(test_samples);
     
     // Print out filter coefficients for debugging
     std::cout << "Final A coefficients" << std::endl;
@@ -179,5 +193,20 @@ int main(){
     for (int i = 0; i < 10; i++){
         std::cout << my_filter.get_filter_coefficients().b[i] << " ";
     }
+    // Print original signal 
+    std::cout << std::endl << "Original signal:" << std::endl;
+    std::cout << "("; 
+    for (int i  = 0; i < test_samples.size(); i++){
+        std::cout << test_samples[i] << ", ";
+    }
+    std::cout << ")" << std::endl;
+
+    // Print filtered signal 
+    std::cout << "Filtered signal:" << std::endl;
+    std::cout << "("; 
+    for (int i  = 0; i < test_filtered.size(); i++){
+        std::cout << test_filtered[i] << ", ";
+    }
+    std::cout << ")" << std::endl;
 
 }
