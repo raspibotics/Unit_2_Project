@@ -1,37 +1,34 @@
 #ifndef CHEBYSHEV_TYPE_I_H
 #define CHEBYSHEV_TYPE_I_H
 
+#include <string>
+#include <vector>
+
 const double pi = 3.14159265358979323846;
 
 // Data structure to control the filter characteristics
 struct filter_params {
     double cutoff_frequency; // 0 - 0.5 (Nyquist frequency)
-    int filter_type; // 0 for low_pass 1 for high_pass
+    std::string filter_type; // "LP" for low_pass "HP" for high_pass
     double percent_ripple; // 0 - 29% 
     int poles; 
 };
 // Data structure to hold the computed chebyshev transfer function coeffecients [a[], b[]]
 struct filter_coefficients {
-    double a[22];
-    double b[22];
+    double a[22] = {0};
+    double b[22] = {0};
 };
-
-// Function Prototypes 
-filter_coefficients chebyshevTypeI(filter_params params);
-bool validate_filter_params(filter_params params);
-void apply_filter(filter_coefficients coeff, double *frequencies);
-
 class ChebyshevI {
     private:
         filter_coefficients _coefficients;
         filter_params _params;
     public: 
         ChebyshevI(); // Default constructor
-        ChebyshevI(filter_coefficients params);
+        ChebyshevI(filter_params params);
         // Filter methods
-        filter_coefficients chebyshevTypeI(filter_params params);
-        bool validate_filter_params(filter_params params);
-        void apply_filter(filter_coefficients coeff, double *frequencies);
+        void calculate_coefficients();
+        bool validate_filter_params();
+        std::vector<double> apply_filter(std::vector<double> samples);
         // Mutators and Acessors
         filter_coefficients get_filter_coefficients();
         filter_params get_filter_params();
@@ -39,3 +36,4 @@ class ChebyshevI {
 };
 
 #endif // CHEBYSHEV_TYPE_I_H
+
