@@ -26,7 +26,7 @@ class ChebyshevI {
         ChebyshevI(); // Default constructor
         ChebyshevI(filter_params params);
         // Filter methods
-        void calculate_coefficients();
+        bool calculate_coefficients();
         bool validate_filter_params();
         std::vector<double> apply_filter(std::vector<double> samples);
         // Mutators and Acessors

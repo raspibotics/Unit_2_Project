@@ -1,14 +1,10 @@
-########################################################################
-####################### Makefile Template ##############################
-########################################################################
-
-# Compiler settings - Can be customized.
+# Compiler settings .
 CC = g++
 CXXFLAGS = -std=c++11 -Wall
-LDFLAGS = 
+LDFLAGS = -lSDL2
 
-# Makefile settings - Can be customized.
-APPNAME = myapp
+# Makefile settings 
+APPNAME = instrument_tuner 
 EXT = .cpp
 SRCDIR = src
 OBJDIR = obj
