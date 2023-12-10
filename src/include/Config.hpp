@@ -6,8 +6,9 @@
 
 // #define TEST_PITCH_DETECTION
 
-// Set sample rate here
+#define TEST_MAIN
 
+// Set sample rate here
 #define SAMPLE_RATE 20480
 
 #define SAMPLE_SIZE 2048

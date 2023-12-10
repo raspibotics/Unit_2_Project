@@ -4,7 +4,9 @@
 #include <atomic>
 #include <vector>
 #include <complex>
+#include "include/config.hpp"
 
+#ifdef TEST_MAIN
 // Declare function prototypes //
 int make_window(); // initialize SDL2 subsystems to create window and renderer
 int destroy_window(); // destroy window and renderer and quit SDL2 subsystems
@@ -19,8 +21,8 @@ void fft(std::vector<std::complex<double>>& vector); // performs the fft on the 
 
 // TODO - Get rid of these, they are declared as macros in config.hpp
 // Declare constants //
-const int SAMPLE_RATE = 20480;
-const int SAMPLE_SIZE = 2048;
+// const int SAMPLE_RATE = 20480;
+// const int SAMPLE_SIZE = 2048;
 //declare constants for the sample rate and sample size
 
 
@@ -186,4 +188,4 @@ void fft(std::vector<std::complex<double>>& vector) {
     }
 }
 
-
+#endif
