@@ -46,4 +46,4 @@ obj/main.o: src/main.cpp /usr/local/include/SDL2/SDL.h \
   /usr/local/include/SDL2/SDL_timer.h \
   /usr/local/include/SDL2/SDL_version.h \
   /usr/local/include/SDL2/SDL_locale.h \
-  /usr/local/include/SDL2/SDL_misc.h src/include/config.hpp
+  /usr/local/include/SDL2/SDL_misc.h src/include/Config.hpp

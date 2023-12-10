@@ -4,7 +4,7 @@
 #include <atomic>
 #include <vector>
 #include <complex>
-#include "include/config.hpp"
+#include "include/Config.hpp"
 
 #ifdef TEST_MAIN
 // Declare function prototypes //
