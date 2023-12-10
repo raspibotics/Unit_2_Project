@@ -4,6 +4,10 @@
 
 // #define TEST_CHEBYSHEV 
 
-#define TEST_HPS
+#define TEST_PITCH_DETECTION
+
+// Set sample rate here
+
+#define SAMPLE_RATE 44100
 
 #endif 
