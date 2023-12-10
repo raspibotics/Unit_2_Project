@@ -1,6 +1,8 @@
 # Compiler settings .
 CC = g++
+# Compiler Flags
 CXXFLAGS = -std=c++11 -Wall
+# Linker Flags - Reference to SDL goes here
 LDFLAGS = -lSDL2
 
 # Makefile settings 
@@ -9,7 +11,6 @@ EXT = .cpp
 SRCDIR = src
 OBJDIR = obj
 
-############## Do not change anything from here downwards! #############
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)

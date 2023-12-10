@@ -1,8 +1,9 @@
-#ifndef CHEBYSHEV_TYPE_I_H
-#define CHEBYSHEV_TYPE_I_H
+#ifndef CHEBYSHEV_TYPE_I_HPP
+#define CHEBYSHEV_TYPE_I_HPP
 
 #include <string>
 #include <vector>
+#include "Config.hpp"
 
 const double pi = 3.14159265358979323846;
 
@@ -22,6 +23,7 @@ class ChebyshevI {
     private:
         filter_coefficients _coefficients;
         filter_params _params;
+        void set_filter_coefficients(filter_coefficients coeff);
     public: 
         ChebyshevI(); // Default constructor
         ChebyshevI(filter_params params);
@@ -35,5 +37,5 @@ class ChebyshevI {
         void set_filter_params(filter_params params);
 };
 
-#endif // CHEBYSHEV_TYPE_I_H
+#endif // CHEBYSHEV_TYPE_I_HPP
 
