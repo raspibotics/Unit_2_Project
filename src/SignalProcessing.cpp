@@ -1,5 +1,7 @@
+// Project includes
 #include "include/SignalProcessing.hpp"
 #include "include/Config.hpp"
+// STL includes
 #include <iostream>
 #include <algorithm>
 
@@ -7,9 +9,8 @@
 // ########### HARMONIC PRODUCT SPECTRUM ###########
 // ----------------------------------------------------------
 // This method is used for robust pitch estimation and to eliminate overtones
-// TODO - pass signal by const reference to increase performance
 // Function to downsample a signal 
-std::vector<double> downsample_signal(std::vector<double> signal, int factor, ChebyshevI anti_aliasing){
+std::vector<double> downsample_signal(const std::vector<double> &signal, int factor, ChebyshevI anti_aliasing){
     std::vector<double> filtered_signal;
     std::vector<double> downsampled; 
     // Apply antialising filter to signal
@@ -21,7 +22,7 @@ std::vector<double> downsample_signal(std::vector<double> signal, int factor, Ch
 }
 
 // Function to perform harmonic product spectrum on a signal 
-double harmonic_product_spectrum(std::vector<double> signal){
+double harmonic_product_spectrum(const std::vector<double> &signal){
     double fundamental_frequency = 0;
     int downsample_cyles = 4; 
     // 2D vector to hold spectrums
@@ -129,6 +130,7 @@ double estimatePitch(const std::vector<double> &signal){
     }    
     // Divide number of cycles by time duration to calculate frequency
     pitch = (crossings/2)*(signal.size()/SAMPLE_RATE);
+    return pitch;
 }
 
 #ifdef TEST_PITCH_DETECTION

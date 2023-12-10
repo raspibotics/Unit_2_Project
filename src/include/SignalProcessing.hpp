@@ -5,9 +5,9 @@
 #include "ChebyshevTypeI.hpp"
 #include "Instrument.hpp"
 
-std::vector<double> downsample_signal(std::vector<double> signal, int factor, ChebyshevI anti_aliasing);
+std::vector<double> downsample_signal(const std::vector<double> &signal, int factor, ChebyshevI anti_aliasing);
 
-double harmonic_product_spectrum(std::vector<double> signal);
+double harmonic_product_spectrum(const std::vector<double> &signal);
 
 double tuning_correction(double fundamental_frequency, Instrument instrument);
 

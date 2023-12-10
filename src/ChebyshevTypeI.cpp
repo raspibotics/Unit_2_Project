@@ -145,7 +145,7 @@ bool ChebyshevI::validate_filter_params(){
 
 // TODO - Test by plotting filter response using python - Check against Impulse, square wave etc.
 // Recursive filter implementation - Based on theory from Chapter 19 (Smith, S.W. 2003. Digital signal processing : a practical guide for engineers and scientists. Amsterdam ; Newnes.
-std::vector<double> ChebyshevI::apply_filter(std::vector<double> samples) {
+std::vector<double> ChebyshevI::apply_filter(const std::vector<double> &samples) {
     int signal_length = samples.size();
     //std::cout << "signal length" << signal_length << std::endl;
     std::vector<double> filtered_signal(signal_length, 0); 

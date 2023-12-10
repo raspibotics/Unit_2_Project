@@ -30,7 +30,7 @@ class ChebyshevI {
         // Filter methods
         bool calculate_coefficients();
         bool validate_filter_params();
-        std::vector<double> apply_filter(std::vector<double> samples);
+        std::vector<double> apply_filter(const std::vector<double> &samples);
         // Mutators and Acessors
         filter_coefficients get_filter_coefficients();
         filter_params get_filter_params();
