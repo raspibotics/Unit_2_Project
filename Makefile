@@ -3,7 +3,7 @@ CC = g++
 # Compiler Flags
 CXXFLAGS = -std=c++11 -Wall
 # Linker Flags - Reference to SDL goes here
-LDFLAGS = -lSDL2
+LDFLAGS = -lSDL2 -lSDL2main
 
 # Makefile settings 
 APPNAME = instrument_tuner 
